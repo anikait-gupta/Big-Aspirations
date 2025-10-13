@@ -1,0 +1,5 @@
+project_root/
+│
+├── ball_rolling_env.py   # Custom environment class implementation
+├── teleop_run.py         # Teleoperation script importing the env
+└── other_scripts.py      # Training, evaluation, etc.
