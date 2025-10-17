@@ -25,7 +25,11 @@ mujoco_robot.add_base(rethink_base)
 # Position the combined model
 mujoco_robot.set_base_xpos([0, 0, 0])
 world.merge(mujoco_robot)
-
+print("All body names in the model")
+for body in find_elements(root=world.worldbody, tags="body"):
+    body_name = body.get("name")
+    if body_name and "right" in body_name.lower():
+        print(f"  {body_name}")
 # Add an empty arena (just a floor)
 mujoco_arena = EmptyArena()
 world.merge(mujoco_arena)
@@ -54,7 +58,7 @@ world.worldbody.append(table_body)
 ee_body = find_elements(
     root=world.worldbody,
     tags="body",
-    attribs={"name": "right_l6"},  # Sawyer's wrist link might be wrong, but it needs to be the "end effector"
+    attribs={"name": "robot0_right_j6"},  # Sawyer's wrist link might be wrong, but it needs to be the "end effector"
     return_first=True
 )
 
@@ -142,3 +146,4 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         viewer.sync()
 
         time.sleep(0.01)
+
