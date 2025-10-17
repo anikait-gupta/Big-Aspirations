@@ -111,6 +111,9 @@ table_body.append(table_geom)
 world.worldbody.append(table_body)
 
 
+# Add custom gripper
+
+# Find the robot's end effector body
 
 # Create free-moving ball with default free joint
 sphere = BallObject(
@@ -127,11 +130,6 @@ world.worldbody.append(sphere)
 
 # Build the MuJoCo model and data
 model = world.get_model(mode="mujoco")
-print(" All body names in compiled model")
-for i in range(model.nbody):
-    body_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
-    if body_name and "right" in body_name.lower():
-        print(f"  {body_name}")
 data = mujoco.MjData(model)
 
 # Step simulation a few times to stabilize
@@ -143,7 +141,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 100:
         mujoco.mj_step(model, data)
         viewer.sync()
-
         time.sleep(0.01)
 
 
