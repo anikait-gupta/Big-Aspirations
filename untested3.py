@@ -25,11 +25,7 @@ mujoco_robot.add_base(rethink_base)
 # Position the combined model
 mujoco_robot.set_base_xpos([0, 0, 0])
 world.merge(mujoco_robot)
-print("All body names in the model")
-for body in find_elements(root=world.worldbody, tags="body"):
-    body_name = body.get("name")
-    if body_name and "right" in body_name.lower():
-        print(f"  {body_name}")
+
 # Add an empty arena (just a floor)
 mujoco_arena = EmptyArena()
 world.merge(mujoco_arena)
@@ -133,6 +129,11 @@ world.worldbody.append(sphere)
 
 # Build the MuJoCo model and data
 model = world.get_model(mode="mujoco")
+print(" All body names in compiled model")
+for i in range(model.nbody):
+    body_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, i)
+    if body_name and "right" in body_name.lower():
+        print(f"  {body_name}")
 data = mujoco.MjData(model)
 
 # Step simulation a few times to stabilize
@@ -146,4 +147,5 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         viewer.sync()
 
         time.sleep(0.01)
+
 
