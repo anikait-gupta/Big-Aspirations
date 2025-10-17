@@ -21,38 +21,8 @@ mujoco_robot.add_base(rethink_base)
 # I add custom cylinder gripper in later, commented out
 # gripper = gripper_factory('RethinkGripper')  # REMOVED
 # mujoco_robot.add_gripper(gripper)            # REMOVED
-
-# Position the combined model
-mujoco_robot.set_base_xpos([0, 0, 0])
-world.merge(mujoco_robot)
-
-# Add an empty arena (just a floor)
-mujoco_arena = EmptyArena()
-world.merge(mujoco_arena)
-
-
-# custom table (30in x 60in x 1in, suspended 40in above floor)
-
-table_body = new_body(name="custom_table", pos="0 0 1.016")  # 40 inches = 1.016m
-
-table_geom = new_geom(
-    type="box",
-    name="table_top",
-    size=[0.381, 0.762, 0.0127],  # Half-sizes: [15in, 30in, 0.5in] in meters
-    pos=[0, 0, 0],
-    rgba=[0.6, 0.4, 0.2, 1],  # Brown wood color
-    friction=[1.0, 0.005, 0.0001],
-    mass=50.0 
-)
-table_body.append(table_geom)
-world.worldbody.append(table_body)
-
-
-# Add custom gripper
-
-# Find the robot's end effector body
 ee_body = find_elements(
-    root=world.root, #from world.worldbody
+    root=world.worldbody,
     tags="body",
     attribs={"name": "robot0_right_j6"},  # Sawyer's wrist link might be wrong, but it needs to be the "end effector"
     return_first=True
@@ -115,6 +85,33 @@ else:
     print("Could not find end effector body")
 
 
+# Position the combined model
+mujoco_robot.set_base_xpos([0, 0, 0])
+world.merge(mujoco_robot)
+
+# Add an empty arena (just a floor)
+mujoco_arena = EmptyArena()
+world.merge(mujoco_arena)
+
+
+# custom table (30in x 60in x 1in, suspended 40in above floor)
+
+table_body = new_body(name="custom_table", pos="0 0 1.016")  # 40 inches = 1.016m
+
+table_geom = new_geom(
+    type="box",
+    name="table_top",
+    size=[0.381, 0.762, 0.0127],  # Half-sizes: [15in, 30in, 0.5in] in meters
+    pos=[0, 0, 0],
+    rgba=[0.6, 0.4, 0.2, 1],  # Brown wood color
+    friction=[1.0, 0.005, 0.0001],
+    mass=50.0 
+)
+table_body.append(table_geom)
+world.worldbody.append(table_body)
+
+
+
 # Create free-moving ball with default free joint
 sphere = BallObject(
     name="sphere",
@@ -148,6 +145,7 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         viewer.sync()
 
         time.sleep(0.01)
+
 
 
 
