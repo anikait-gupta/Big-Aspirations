@@ -6,7 +6,6 @@ from robosuite.utils.mjcf_utils import new_body, new_geom, new_site, find_elemen
 import mujoco
 import time
 import numpy as np
-# Import the EmptyArena instead of TableArena
 from robosuite.models.arenas import EmptyArena
 from robosuite.models.objects import BallObject
 
@@ -18,11 +17,8 @@ rethink_base = RethinkMount()
 mujoco_robot = Sawyer()
 mujoco_robot.add_base(rethink_base)
 
-# I add custom cylinder gripper in later, commented out
-# gripper = gripper_factory('RethinkGripper')  # REMOVED
-# mujoco_robot.add_gripper(gripper)            # REMOVED
-
-gripper_body = new_body(name="cylinder_gripper", pos="0 0 0.3")  # Offset it upward to see it
+# Add custom gripper - attach directly to robot's worldbody
+gripper_body = new_body(name="cylinder_gripper", pos="0 0 0.3")
 
 # OUTER CYLINDER
 outer_cylinder = new_geom(
@@ -60,7 +56,16 @@ bottom_cap = new_geom(
 )
 gripper_body.append(bottom_cap)
 
-# Attach directly to robot's worldbody as a test
+# Add grip site
+grip_site = new_site(
+    name="grip_site",
+    pos=[0, 0, 0.07],
+    size=[0.005],
+    rgba=[1, 0, 0, 1]
+)
+gripper_body.append(grip_site)
+
+# Attach gripper to robot
 mujoco_robot.worldbody.append(gripper_body)
 print("Cylinder gripper added to robot")
 
@@ -72,39 +77,30 @@ world.merge(mujoco_robot)
 mujoco_arena = EmptyArena()
 world.merge(mujoco_arena)
 
-
-# custom table (30in x 60in x 1in, suspended 40in above floor)
-
-table_body = new_body(name="custom_table", pos="0 0 1.016")  # 40 inches = 1.016m
+# Custom table (30in x 60in x 1in, suspended 40in above floor)
+table_body = new_body(name="custom_table", pos="0 0 1.016")
 
 table_geom = new_geom(
     type="box",
     name="table_top",
-    size=[0.381, 0.762, 0.0127],  # Half-sizes: [15in, 30in, 0.5in] in meters
+    size=[0.381, 0.762, 0.0127],
     pos=[0, 0, 0],
-    rgba=[0.6, 0.4, 0.2, 1],  # Brown wood color
+    rgba=[0.6, 0.4, 0.2, 1],
     friction=[1.0, 0.005, 0.0001],
     mass=50.0 
 )
 table_body.append(table_geom)
 world.worldbody.append(table_body)
 
-
-# Add custom gripper
-
-# Find the robot's end effector body
-
-# Create free-moving ball with default free joint
+# Create free-moving ball
 sphere = BallObject(
     name="sphere",
     size=[0.03],
     rgba=[0, 0.5, 0.5, 1]
 ).get_obj()
 
-# Set ball initial position on the table, change to gripper position later once it works
-sphere.set('pos', '0.1 0 1.05')  # On top of table at 40in + 1in + ball radius
-
-# Add ball directly to worldbody
+# Set ball initial position on the table
+sphere.set('pos', '0.1 0 1.05')
 world.worldbody.append(sphere)
 
 # Build the MuJoCo model and data
