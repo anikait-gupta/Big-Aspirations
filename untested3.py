@@ -52,13 +52,14 @@ world.worldbody.append(table_body)
 
 # Find the robot's end effector body
 ee_body = find_elements(
-    root=world.worldbody,
+    root=world.root, #from world.worldbody
     tags="body",
     attribs={"name": "robot0_right_j6"},  # Sawyer's wrist link might be wrong, but it needs to be the "end effector"
     return_first=True
 )
 
 if ee_body is not None:
+    print("eeee")
     # Create cylinder gripper body
     gripper_body = new_body(name="cylinder_gripper", pos="0 0 0")
     
@@ -147,5 +148,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         viewer.sync()
 
         time.sleep(0.01)
+
 
 
