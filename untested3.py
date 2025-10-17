@@ -36,7 +36,7 @@ world.merge(mujoco_arena)
 table_body = new_body(name="custom_table", pos="0 0 1.016")  # 40 inches = 1.016m
 
 table_geom = new_geom(
-    geom_type="box",
+    type="box",
     name="table_top",
     size=[0.381, 0.762, 0.0127],  # Half-sizes: [15in, 30in, 0.5in] in meters
     pos=[0, 0, 0],
@@ -64,7 +64,7 @@ if ee_body is not None:
     
     # OUTER CYLINDER (the main structure)
     outer_cylinder = new_geom(
-        geom_type="cylinder",
+        type="cylinder",
         name="outer_cylinder",
         size=[0.045, 0.07],  # [radius, half-height] = 4.5cm radius, 7cm tall
         pos=[0, 0, 0.07],
@@ -76,7 +76,7 @@ if ee_body is not None:
     
     # INNER CYLINDER (hollow space inside)
     inner_cylinder = new_geom(
-        geom_type="cylinder",
+        type="cylinder",
         name="inner_cylinder",
         size=[0.040, 0.065],  # Slightly smaller
         pos=[0, 0, 0.075],
@@ -88,7 +88,7 @@ if ee_body is not None:
     
     # BOTTOM CAP (closes the bottom of the cup)
     bottom_cap = new_geom(
-        geom_type="cylinder",
+        type="cylinder",
         name="gripper_bottom",
         size=[0.045, 0.003],
         pos=[0, 0, 0.003],
@@ -140,4 +140,5 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
     while data.time < 100:
         mujoco.mj_step(model, data)
         viewer.sync()
+
         time.sleep(0.01)
