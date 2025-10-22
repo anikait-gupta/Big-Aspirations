@@ -19,6 +19,7 @@ mujoco_robot = Sawyer()
 rethink_base = RethinkMount()
 mujoco_robot.add_base(rethink_base)
 gripper = gripper_factory('RethinkGripper')
+# Check here for info on how to change the gripper
 mujoco_robot.add_gripper(gripper)
 
 mujoco_robot.set_base_xpos([0, 0, 0])
