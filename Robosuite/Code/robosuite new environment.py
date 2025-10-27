@@ -1,5 +1,6 @@
 from robosuite.models import MujocoWorldBase
 from robosuite.models.robots import Sawyer
+from new_Sawyer import MyNewSaywer
 from robosuite.models.grippers import gripper_factory
 from robosuite.models.arenas import TableArena
 from robosuite.models.objects import BallObject
@@ -10,16 +11,26 @@ import time
 import math
 import numpy as np
 from robosuite.models.bases import RethinkMount
+from robosuite.models.grippers import ALL_GRIPPERS, GRIPPER_MAPPING, register_gripper
+from custom_gripper import CustomGripper
+import os
 
+current_directory = os.getcwd()
 
 
 
 world = MujocoWorldBase()
-mujoco_robot = Sawyer()
+mujoco_robot = MyNewSaywer()
 rethink_base = RethinkMount()
 mujoco_robot.add_base(rethink_base)
-gripper = gripper_factory('RethinkGripper')
+
+# register_gripper(CustomGripper(current_directory + "/custom_gripper.xml"))
+register_gripper(CustomGripper)
+# gripper = gripper_factory('CustomGripper')
+gripper = CustomGripper(current_directory + "/custom_gripper.xml")
 mujoco_robot.add_gripper(gripper)
+
+# register_gripper
 
 mujoco_robot.set_base_xpos([0, 0, 0])
 mujoco_robot.set_base_ori([0, 0, math.pi])

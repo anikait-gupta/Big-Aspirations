@@ -6,5 +6,5 @@ from robosuite.utils.mjcf_utils import xml_path_completion
 
 
 class MyNewSaywer(Sawyer):
-    def __init__():
-        super.__init__(xml_path_completion("your_robot_path.xml"))
+    def __init__(self):
+        super().__init__(xml_path_completion("your_robot_path.xml"))

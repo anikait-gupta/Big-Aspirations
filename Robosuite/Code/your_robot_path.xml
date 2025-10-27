@@ -120,6 +120,9 @@
     <mesh name="l6_3" file="obj_meshes/l6/l6_3.obj"/>
     <mesh name="l6_4" file="obj_meshes/l6/l6_4.obj"/>
     <mesh name="l6_5" file="obj_meshes/l6/l6_5.obj"/>
+    <!-- Custom gripper mesh -->
+    <material name="gripper_mat" specular="0.5" shininess="0.3" rgba="0.8 0.8 0.8 1"/>
+    <mesh name="custom_gripper" file="Shield.stl" scale="0.001 0.001 0.001"/>
   </asset>
   <worldbody>
     <body name="base" pos="0 0 0">
@@ -234,11 +237,52 @@
                       <geom mesh="l6_4" material="Mtl2.012" type="mesh" contype="0" conaffinity="0" group="1"/>
                       <geom mesh="l6_5" material="Mtl1.012" type="mesh" contype="0" conaffinity="0" group="1"/>
                       <geom pos="0 0.015 -0.01" rgba="0.5 0.1 0.1 1" size="0.055 0.025" type="cylinder" name="link6_collision"/>
+                      <!-- Custom Code (our code) 
+                      <body name="right_hand" pos="0 0 0.024" quat="0.707105 0 0 0.707108">
+                        End-effector camera 
+                        <camera mode="fixed" name="eye_in_hand" pos="0.05 0 0" quat="0 0.707108 0.707108 0" fovy="75"/>
+                      
+                        Custom STL gripper 
+                        <geom name="gripper_geom" type="mesh" mesh="custom_gripper" material="gripper_mat"
+                              pos="0 0 0.05" quat="0.707 0 0.707 0"
+                              contype="1" conaffinity="1" group="1" rgba="0.9 0.9 0.9 1"/>
+                      
+                        Optional simplified collision shape 
+                        <geom name="gripper_collision" type="box" size="0.025 0.04 0.015" pos="0 0 0.055"
+                              rgba="0.5 0.1 0.1 0.3" contype="1" conaffinity="1"/>
+                      </body>
+                      End of Custom Code (our code) -->
+
+                      <!-- Custom Code -->
+
+                      <body name="shield" pos="0 0 0.0" quat="1 0 0 0">
+                        <geom type="mesh"
+                              mesh="custom_gripper"
+                              material="gripper_mat"
+                              contype="0"
+                              conaffinity="0"
+                              group="1"
+                              rgba="0.8 0.8 0.8 1"/>
+                        
+                        <!-- Optional collision geometry (simple shape for physics) -->
+                        <geom type="box"
+                              pos="0 0 0.1"
+                              size="0.05 0.05 0.01"
+                              rgba="0.5 0.1 0.1 0.3"
+                              name="shield_collision"/>
+                      </body>
+                      <!-- <body name = "shield">
+                        <geom mesh="custom_gripper" material="Mtl6.006" type = "mesh" contype="0" conaffinity="0" group="1"/>
+                        <geom pos="0 0 0.1" rgba="0.5 0.1 0.1 1" size="1" name="link5_collision"/>
+                        
+                      </body> -->
                       <body name="right_hand" pos="0 0 0.024" quat="0.707105 0 0 0.707108">
                         <!-- This camera points out from the eef. -->
                         <camera mode="fixed" name="eye_in_hand" pos="0.05 0 0" quat="0 0.707108 0.707108 0" fovy="75"/>
                         <!-- To add gripper -->
                       </body>
+                      <!-- End of Custom Code-->
+
                     </body>
                   </body>
                   <body name="right_l4_2" pos="0 0 0">
